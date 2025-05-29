@@ -3,7 +3,7 @@ const Account = db.Account;
 const Destination = db.Destination; // Import Destination model
 
 // Create Account
-exports.createAccount = async (req, res) => {
+const createAccount = async (req, res) => {
   try {
     const { email, accountName, website } = req.body;
 
@@ -19,7 +19,7 @@ exports.createAccount = async (req, res) => {
 };
 
 // Get All Accounts
-exports.getAccounts = async (req, res) => {
+const getAccounts = async (req, res) => {
   try {
     const accounts = await Account.findAll();
     res.json(accounts);
@@ -29,7 +29,7 @@ exports.getAccounts = async (req, res) => {
 };
 
 // Get Account by ID
-exports.getAccount = async (req, res) => {
+const getAccount = async (req, res) => {
   try {
     const account = await Account.findByPk(req.params.id);
     if (!account) return res.status(404).json({ message: "Account not found." });
@@ -40,12 +40,12 @@ exports.getAccount = async (req, res) => {
 };
 
 // Update Account
-exports.updateAccount = async (req, res) => {
+const updateAccount = async (req, res) => {
   try {
-    const { accountName, website ,email} = req.body;
+    const { accountName, website, email } = req.body;
     const account = await Account.findByPk(req.params.id);
     if (!account) return res.status(404).json({ message: "Account not found." });
-    account.email=email||account.email;
+    account.email = email || account.email;
     account.accountName = accountName || account.accountName;
     account.website = website || account.website;
     await account.save();
@@ -57,7 +57,7 @@ exports.updateAccount = async (req, res) => {
 };
 
 // Delete Account and its Destinations
-exports.deleteAccount = async (req, res) => {
+const deleteAccount = async (req, res) => {
   try {
     const account = await Account.findByPk(req.params.id);
     if (!account) return res.status(404).json({ message: "Account not found." });
@@ -69,41 +69,7 @@ exports.deleteAccount = async (req, res) => {
   }
 };
 
-// Get All Destinations of an Account
-// exports.getDestinations = async (req, res) => {
-//   try {
-//     const account = await Account.findByPk(req.params.id, {
-//       include: ['Destinations']
-//     });
-//     if (!account) return res.status(404).json({ message: "Account not found." });
-
-//     res.json(account.Destinations);
-//   } catch (err) {
-//     res.status(500).json({ message: err.message });
-//   }
-// };
-
-// exports.getAccountWithDestinations = async (req, res) => {
-//   try {
-//     const { id } = req.params;
-//     const account = await Account.findByPk(id, {
-//       include: [{ model: Destination, as: 'Destinations' }]
-//     });
-
-//     if (!account) {
-//       return res.status(404).json({ message: "Account not found" });
-//     }
-
-//     res.json(account);
-//   } catch (error) {
-//     console.error("Error fetching account:", error);
-//     res.status(500).json({ message: "Server error" });
-//   }
-// };
-// controllers/account.controller.js
-// const { Account, Destination } = require('../models');
-
-exports.getDestinations = async (req, res) => {
+const getDestinations = async (req, res) => {
   try {
     const { id } = req.params;
 
@@ -121,3 +87,10 @@ exports.getDestinations = async (req, res) => {
     res.status(500).json({ message: "Server Error" });
   }
 };
+module.exports = {
+  createAccount,
+  getAccounts,
+  getAccount,
+  updateAccount,
+  deleteAccount
+}
